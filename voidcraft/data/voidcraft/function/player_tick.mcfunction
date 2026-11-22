@@ -6,7 +6,6 @@ execute if score @s vc_cooldown matches 1.. run scoreboard players remove @s vc_
 function voidcraft:casting/validate
 execute if score @s vc_cast matches 2 run function voidcraft:casting/cancel
 execute if score @s vc_state matches 1.. run function voidcraft:casting/advance
-execute unless score @s vc_cast matches 0..2 run function voidcraft:casting/request
-execute if score @s vc_cast matches 1 run function voidcraft:casting/request
+execute unless score @s vc_cast matches 0 unless score @s vc_cast matches 2 run function voidcraft:casting/request
 scoreboard players set @s vc_cast 0
 scoreboard players enable @s vc_cast
