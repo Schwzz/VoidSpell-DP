@@ -1,0 +1,1 @@
+scoreboard players operation @s vc_owner = #pending vc_owner

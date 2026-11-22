@@ -1,0 +1,1 @@
+execute if score @s vc_state matches 1 run function voidcraft:sequence/preview/cleanup

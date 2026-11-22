@@ -1,0 +1,1 @@
+scoreboard players set @s vc_time 0

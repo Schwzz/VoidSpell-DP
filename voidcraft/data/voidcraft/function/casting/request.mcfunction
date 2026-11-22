@@ -1,0 +1,1 @@
+execute if score @s vc_cast matches 1 run function voidcraft:casting/request_preview

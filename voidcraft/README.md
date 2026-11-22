@@ -17,10 +17,14 @@ Operators can also run `/execute as <player> at <player> run function voidcraft:
 
 ## Architecture
 
-Each online player has their own state, elapsed time and cooldown scores. State 0 is idle; state 1 dispatches the preview sequence. The dispatcher increments the timer once per tick, starting on the tick after acceptance, and calls the active sequence's tick function. Each sequence owns its timed events and completion. Add future sequences as separate functions, assign each a distinct positive state in the dispatcher, and extend the valid-state check in `player_tick`.
+Each online player has their own state, elapsed time and cooldown scores. State 0 is idle; state 1 dispatches the preview sequence. The dispatcher increments the timer once per tick, starting on the tick after acceptance, and calls the active sequence's tick function. Each sequence owns its timed events, timeout, completion, and cleanup. For a future sequence, add its request to `casting/request`, state to `casting/validate` and `casting/advance`, and cleanup to `casting/cleanup`.
 
-A 200-tick watchdog resets a stuck sequence; unknown states and negative active timers are also reset. Cooldowns and sequences pause while a player is offline and resume after they return; scores persist across reloads. Removing the pack does not automatically remove its scoreboard objectives.
+The preview recovers if its timer reaches 201; future sequences choose their own timeout. Unknown states and negative active timers are also reset. Cleanup runs before a known sequence's state is cleared on completion, cancellation, or recovery. Cooldowns and sequences pause while a player is offline and resume after they return; scores persist across reloads. Removing the pack does not automatically remove its scoreboard objectives.
 
-Objective setup runs once per world using a persistent storage marker, so subsequent reloads do not recreate objectives or reset scores. When upgrading a world that already has the objectives, the first reload may report that they already exist. If objectives are manually removed, remove the setup marker with `/data remove storage voidcraft:system initialized` and reload to recreate them; recreating a removed objective cannot restore its scores.
+Objective setup probes each objective on every load and creates missing ones without resetting existing scores. Recreating a removed objective cannot restore its scores. The probe can fail when an objective is missing; check the reload log when testing initialization.
+
+For future entity-based spells, call `casting/prepare_owner` as the caster, then immediately summon the entity and call `casting/bind_owner` as that entity in the same synchronous function chain. The player and entity then share a `vc_owner` score, which can be compared with scoreboard operations. The pending value is shared scratch space: do not defer binding or call another prepare between preparation and binding. Keep the `vc_owner` objective and its `#next` counter intact; deleting or resetting them can cause ID collisions. Integer overflow is not handled. The preview does not spawn entities.
+
+Death and respawn do not explicitly cancel a cast. Decide on a death policy and test a per-player death-detection mechanism before adding one.
 
 This pack declares format 48 and uses `data/minecraft/tag/function/` as required by this project's configuration. These settings do not match the requested Minecraft 1.21.11 format and tag directory, so compatibility with 1.21.11 is not established.

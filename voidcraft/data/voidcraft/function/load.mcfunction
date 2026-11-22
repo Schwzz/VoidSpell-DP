@@ -1,1 +1,1 @@
-execute unless data storage voidcraft:system initialized run function voidcraft:initialize
+function voidcraft:initialize
