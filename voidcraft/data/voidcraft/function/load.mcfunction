@@ -1,4 +1,1 @@
-scoreboard objectives add vc_cast trigger
-scoreboard objectives add vc_state dummy
-scoreboard objectives add vc_time dummy
-scoreboard objectives add vc_cooldown dummy
+execute unless data storage voidcraft:system initialized run function voidcraft:initialize

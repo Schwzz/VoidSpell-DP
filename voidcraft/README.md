@@ -21,4 +21,6 @@ Each online player has their own state, elapsed time and cooldown scores. State 
 
 A 200-tick watchdog resets a stuck sequence; unknown states and negative active timers are also reset. Cooldowns and sequences pause while a player is offline and resume after they return; scores persist across reloads. Removing the pack does not automatically remove its scoreboard objectives.
 
-This pack uses format 48 as required by the project configuration; Minecraft 1.21.11 compatibility has not been verified.
+Objective setup runs once per world using a persistent storage marker, so subsequent reloads do not recreate objectives or reset scores. When upgrading a world that already has the objectives, the first reload may report that they already exist. If objectives are manually removed, remove the setup marker with `/data remove storage voidcraft:system initialized` and reload to recreate them; recreating a removed objective cannot restore its scores.
+
+This pack declares format 48 and uses `data/minecraft/tag/function/` as required by this project's configuration. These settings do not match the requested Minecraft 1.21.11 format and tag directory, so compatibility with 1.21.11 is not established.

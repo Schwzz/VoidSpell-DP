@@ -1,0 +1,5 @@
+scoreboard objectives add vc_cast trigger
+scoreboard objectives add vc_state dummy
+scoreboard objectives add vc_time dummy
+scoreboard objectives add vc_cooldown dummy
+data modify storage voidcraft:system initialized set value 1b
